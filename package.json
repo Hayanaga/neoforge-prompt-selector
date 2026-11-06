@@ -1,9 +1,9 @@
 {
-    "name": "sd-d2-prompt-selector",
-    "version": "1.0.0",
+    "name": "neo-forge-prompt-selector",
+    "version": "1.2.0",
     "description": "",
     "keywords": [],
-    "author": "da2el",
+    "author": "da2el, Hayanaga",
     "license": "MIT",
     "scripts": {
         "build": "npm run build_ts && npm run move_css",
