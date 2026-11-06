@@ -99,7 +99,7 @@ class D2PSElementBuilder {
    */
   static openButton({ onClick = () => {
   } }) {
-    const button = D2PSElementBuilder.baseButton("🔯タグを選択", {
+    const button = D2PSElementBuilder.baseButton("📑Open Tags", {
       size: "sm",
       color: "secondary"
     });
@@ -228,7 +228,7 @@ class D2PSElementBuilder {
     const container = document.createElement("div");
     container.classList.add("d2ps-search-container");
     container.appendChild(input);
-    const button = D2PSElementBuilder.baseButton(`${D2PSSearch.ICON}検索`, {
+    const button = D2PSElementBuilder.baseButton(`${D2PSSearch.ICON} Search`, {
       size: "sm",
       color: "secondary"
     });
@@ -561,7 +561,7 @@ class D2PSPromptSelectorUnit {
   $_render() {
     const container = D2PSElementBuilder.psContainer(`${this.AREA_ID_BASE}${this.type}`);
     const negativeCheckbox = D2PSElementBuilder.negativeCheckbox(
-      "ネガティブプロンプトに入力（Ctrl/Command + クリックでも可）",
+      "Send to Negative Prompt (Ctrl/Command + Click also works)",
       {
         onChange: (checked) => {
           this.toNegative = checked;
