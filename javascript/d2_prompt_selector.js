@@ -309,6 +309,7 @@ const _D2PSToolTip = class _D2PSToolTip {
     
     // Crear el contenedor principal
     self.container = D2PSElementBuilder.toolTipContainer();
+    self.container.style.zIndex = "99999";
     self.container.addEventListener("animationend", () => {
       self.container.setAttribute("data-show", "");
     });
