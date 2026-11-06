@@ -300,37 +300,71 @@ class D2PSTabNavi {
 }
 const _D2PSToolTip = class _D2PSToolTip {
   /**
-   * 初期化
+   * 初期化 (Inicialización)
    */
   static init() {
     const self = _D2PSToolTip;
     if (document.querySelector(self.CONTAINER_CLASS))
       return;
+    
+    // Crear el contenedor principal
     self.container = D2PSElementBuilder.toolTipContainer();
     self.container.addEventListener("animationend", () => {
       self.container.setAttribute("data-show", "");
     });
+    
+    // Crear el elemento para el texto
+    self.textElement = document.createElement("div");
+    self.container.appendChild(self.textElement);
+    
+    // Crear el elemento para la imagen (oculta por defecto)
+    self.imageElement = document.createElement("img");
+    self.imageElement.style.display = "none";
+    self.imageElement.style.maxWidth = "256px"; // Ajusta el tamaño de la previsualización
+    self.imageElement.style.marginTop = "8px";
+    self.imageElement.style.borderRadius = "4px";
+    
+    // Si la imagen falla al cargar (no existe), la ocultamos
+    self.imageElement.onerror = function() {
+        this.style.display = "none";
+    };
+
+    self.container.appendChild(self.imageElement);
+
     document.body.appendChild(self.container);
   }
+  
   /**
-   * ツールチップの表示は有効か
+   * ツールチップの表示は有効か (Comprobar si está habilitado)
    */
   static get isEnabled() {
     return opts.d2_ps_enable_tooltip;
   }
-  /**
-   * タグを表示
+  
+   /**
+   * タグを表示 (Mostrar el tooltip con texto y posible imagen)
    */
-  static showTip(tag) {
+  static showTip(title, value) {
     const self = _D2PSToolTip;
     if (!self.isEnabled)
       return;
     self.toHide = false;
-    self.container.textContent = tag;
+    
+    // 1. Mostrar siempre el texto del prompt
+    self.textElement.textContent = value;
+    
+    // 2. Intentar cargar la imagen usando el TÍTULO (nombre de la categoría/botón)
+    const safeImageName = encodeURIComponent(title);
+    
+    // IMPORTANTE: Verifica que esta ruta coincida con el nombre de tu extensión
+    self.imageElement.src = `/file=extensions/neoforge-prompt-selector/tags/${safeImageName}.png`;
+    self.imageElement.style.display = "block"; // Se mostrará; si falla, el 'onerror' la oculta
+    
     self.container.setAttribute("data-show", "true");
   }
+  
   /**
-   * 非表示
+   * 非表示 (Ocultar)
    */
   static hideTip() {
     const self = _D2PSToolTip;
@@ -341,11 +375,16 @@ const _D2PSToolTip = class _D2PSToolTip {
       if (!self.toHide)
         return;
       self.container.setAttribute("data-show", "false");
+      self.imageElement.style.display = "none"; // Limpiar imagen al ocultar
+      self.imageElement.src = "";
     }, 500);
   }
 };
+
 __publicField(_D2PSToolTip, "CONTAINER_CLASS", "d2ps-tooltip-container");
 __publicField(_D2PSToolTip, "container");
+__publicField(_D2PSToolTip, "textElement"); // Nueva propiedad
+__publicField(_D2PSToolTip, "imageElement"); // Nueva propiedad
 __publicField(_D2PSToolTip, "toHide", false);
 let D2PSToolTip = _D2PSToolTip;
 class D2PSCategory {
@@ -436,7 +475,8 @@ class D2PSCategory {
         this.onRightClick(value, e.metaKey || e.ctrlKey);
       },
       onMouseEnter: () => {
-        D2PSToolTip.showTip(value);
+        // AQUÍ EL CAMBIO: Pasamos el título (para la imagen) y el valor (para el texto)
+        D2PSToolTip.showTip(title, value);
       },
       onMouseLeave: () => {
         D2PSToolTip.hideTip();
