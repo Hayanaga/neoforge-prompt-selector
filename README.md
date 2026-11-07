@@ -1,3 +1,8 @@
+## Update Nov 06 2026
+
+- Properly translated menus to english.
+- Added the ability to add image previews to prompts, just put a PNG inside the tags folder and name it the same as your prompt identifier label.
+
 # D2 Prompt Selector
 
 [[日本語](README_ja.md)]
