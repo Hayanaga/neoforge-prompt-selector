@@ -153,23 +153,6 @@ class D2PSElementBuilder {
     button.classList.add("d2ps-tab-button");
     return button;
   }
-  // /**
-  //  * タグのカテゴリ（ファイル単位）を覆うコンテナ
-  //  */
-  // static categoryContainer(id: string = ''): HTMLElement {
-  //     const container = document.createElement('div');
-  //     container.id = id;
-  //     container.classList.add('d2ps-category-container', 'tabitem', 'gradio-tabitem');
-  //     return container;
-  // }
-  // /**
-  //  * グループボタン（ランダムボタン）とタグフィールドを格納する枠
-  //  */
-  // static groupContainer(): HTMLElement {
-  //     const container = document.createElement('div');
-  //     container.classList.add('d2ps-group-container');
-  //     return container;
-  // }
   /**
    * タグボタン、グループを格納する枠
    */
@@ -300,32 +283,32 @@ class D2PSTabNavi {
 }
 const _D2PSToolTip = class _D2PSToolTip {
   /**
-   * 初期化 (Inicialización)
+   * 初期化 (Init)
    */
   static init() {
     const self = _D2PSToolTip;
     if (document.querySelector(self.CONTAINER_CLASS))
       return;
     
-    // Crear el contenedor principal
+    // Create main container
     self.container = D2PSElementBuilder.toolTipContainer();
     self.container.style.zIndex = "99999";
     self.container.addEventListener("animationend", () => {
       self.container.setAttribute("data-show", "");
     });
     
-    // Crear el elemento para el texto
+    // Create text element
     self.textElement = document.createElement("div");
     self.container.appendChild(self.textElement);
     
-    // Crear el elemento para la imagen (oculta por defecto)
+    // Create image element (hidden by default)
     self.imageElement = document.createElement("img");
     self.imageElement.style.display = "none";
     self.imageElement.style.maxWidth = "256px"; // Ajusta el tamaño de la previsualización
     self.imageElement.style.marginTop = "8px";
     self.imageElement.style.borderRadius = "4px";
     
-    // Si la imagen falla al cargar (no existe), la ocultamos
+    // If no image, hide (fallback)
     self.imageElement.onerror = function() {
         this.style.display = "none";
     };
@@ -336,14 +319,14 @@ const _D2PSToolTip = class _D2PSToolTip {
   }
   
   /**
-   * ツールチップの表示は有効か (Comprobar si está habilitado)
+   * ツールチップの表示は有効か
    */
   static get isEnabled() {
     return opts.d2_ps_enable_tooltip;
   }
   
    /**
-   * タグを表示 (Mostrar el tooltip con texto y posible imagen)
+   * タグを表示
    */
   static showTip(title, value) {
     const self = _D2PSToolTip;
@@ -351,13 +334,12 @@ const _D2PSToolTip = class _D2PSToolTip {
       return;
     self.toHide = false;
     
-    // 1. Mostrar siempre el texto del prompt
+    // 1. Show prompt text
     self.textElement.textContent = value;
     
-    // 2. Intentar cargar la imagen usando el TÍTULO (nombre de la categoría/botón)
+    // 2. Load image using tittle
     const safeImageName = encodeURIComponent(title);
     
-    // IMPORTANTE: Verifica que esta ruta coincida con el nombre de tu extensión
     self.imageElement.src = `/file=extensions/neoforge-prompt-selector/tags/${safeImageName}.png`;
     self.imageElement.style.display = "block"; // Se mostrará; si falla, el 'onerror' la oculta
     
@@ -365,7 +347,7 @@ const _D2PSToolTip = class _D2PSToolTip {
   }
   
   /**
-   * 非表示 (Ocultar)
+   * 非表示
    */
   static hideTip() {
     const self = _D2PSToolTip;
@@ -376,7 +358,7 @@ const _D2PSToolTip = class _D2PSToolTip {
       if (!self.toHide)
         return;
       self.container.setAttribute("data-show", "false");
-      self.imageElement.style.display = "none"; // Limpiar imagen al ocultar
+      self.imageElement.style.display = "none"; 
       self.imageElement.src = "";
     }, 500);
   }
@@ -384,8 +366,8 @@ const _D2PSToolTip = class _D2PSToolTip {
 
 __publicField(_D2PSToolTip, "CONTAINER_CLASS", "d2ps-tooltip-container");
 __publicField(_D2PSToolTip, "container");
-__publicField(_D2PSToolTip, "textElement"); // Nueva propiedad
-__publicField(_D2PSToolTip, "imageElement"); // Nueva propiedad
+__publicField(_D2PSToolTip, "textElement"); 
+__publicField(_D2PSToolTip, "imageElement"); 
 __publicField(_D2PSToolTip, "toHide", false);
 let D2PSToolTip = _D2PSToolTip;
 class D2PSCategory {
